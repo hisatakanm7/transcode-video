@@ -7,8 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "aws-sdk": "latest"
+    "aws-sdk": "^2.224.1"
   },
   "author": "Yuki Oniki",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "run-local-lambda": "^1.1.1"
+  }
 }
