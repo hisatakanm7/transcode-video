@@ -1,8 +1,8 @@
 'use strict';
 
-var AWS = require('aws-sdk');
+const AWS = require('aws-sdk');
 
-var elasticTranscoder = new AWS .ElasticTranscoder({
+const elasticTranscoder = new AWS .ElasticTranscoder({
     region: 'us-east-1'
 });
 
