@@ -1,6 +1,7 @@
 'use strict';
 
 const AWS = require('aws-sdk');
+AWS.config.loadFromPath('./config.json');
 
 const elasticTranscoder = new AWS .ElasticTranscoder({
     region: 'us-east-1'
