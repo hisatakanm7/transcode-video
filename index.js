@@ -1,50 +1,51 @@
+/**
+ * Created by Peter Sbarski
+ * Serverless Architectures on AWS
+ * http://book.acloud.guru/
+ * Last Updated: Feb 11, 2017
+ */
+
 'use strict';
+var AWS = require('aws-sdk');
 
-const AWS = require('aws-sdk');
-AWS.config.loadFromPath('./config.json');
-
-const elasticTranscoder = new AWS .ElasticTranscoder({
+var elasticTranscoder = new AWS.ElasticTranscoder({
     region: 'us-east-1'
 });
 
-exports.handler = function(event, context, callback) {
-    const record = event.Records[0];
-    if (!record.hasOwnProperty('s3') || !record.s3.hasOwnProperty('object')) {
-        console.log('received invalid parameter');
-        return;
-    }
-    const key = record.s3.object.key;
+exports.handler = function(event, context, callback){
+    console.log('Welcome');
 
-    const sourceKey = decodeURIComponent(key.replace(/\+/g, " "));
+    var key = event.Records[0].s3.object.key;
 
-    const outputKey = sourceKey.split('.')[0]
+    //the input file may have spaces so replace them with '+'
+    var sourceKey = decodeURIComponent(key.replace(/\+/g, ' '));
 
-    console.log('key:', key, sourceKey, outputKey);
+    //remove the extension
+    var outputKey = sourceKey.split('.')[0];
 
-    const params = {
+    var params = {
         PipelineId: '1523456019099-z6khd9',
-        OutputKeyPrefix: outputKey + '/',
         Input: {
             Key: sourceKey
         },
         Outputs: [
             {
                 Key: outputKey + '-1080p' + '.mp4',
-                PresetId: '1351620000001-000001'
+                PresetId: '1351620000001-000001' //Generic 1080p
             },
             {
                 Key: outputKey + '-720p' + '.mp4',
-                PresetId: '1351620000001-000010'
+                PresetId: '1351620000001-000010' //Generic 720p
             },
             {
                 Key: outputKey + '-web-720p' + '.mp4',
-                PresetId: '1351620000001-100070'
+                PresetId: '1351620000001-100070' //Web Friendly 720p
             }
-        ]
-    };
-    elasticTranscoder.createJob(params, function(error, data) {
-        if (error) {
+        ]};
+
+    elasticTranscoder.createJob(params, function(error, data){
+        if (error){
             callback(error);
-        };
+        }
     });
 };
